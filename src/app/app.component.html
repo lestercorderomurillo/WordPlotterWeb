@@ -1,11 +1,31 @@
 <mat-tab-group>
   <mat-tab label="Groups">
     <div style="margin: 20px;">
-      <button mat-flat-button color="primary">Add new group</button>
-      <br><br>
-      <h1>Groups</h1>
+      <form [formGroup]="formGroup" (ngSubmit)="onClickSubmit(formGroup.value.groupName)" class="group-form">
+        <mat-form-field appearance="fill">
+          <mat-label>Group name</mat-label>
+          <input formControlName="groupName" name="groupName" type="text" matInput>
+          <mat-error *ngIf="formGroup.get('groupName').hasError('required')">
+            This field is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <button [disabled]="!formGroup.valid" mat-flat-button color="primary" style="height: 50px; top: -7px;">Add new
+          group</button>
+      </form>
+      <h1>Registered groups</h1>
+      <div>
+        <div *ngIf="registerGroups.length == 0">No groups added yet.</div>
+        <div class="pdf-item" *ngFor="let group of registerGroups">
+          <div class="inline">
+            {{group}}
+          </div>
+          <div class="inline float-right">
+              <mat-icon (click)="onClickDelete(group)">delete_sweep</mat-icon>
+          </div>
+        </div>
+      </div>
     </div>
   </mat-tab>
+  <mat-tab label="Words"></mat-tab>
   <mat-tab label="Graphs"></mat-tab>
 </mat-tab-group>
-<router-outlet></router-outlet>
