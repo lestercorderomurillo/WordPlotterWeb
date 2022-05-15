@@ -9,8 +9,10 @@
             This field is <strong>required</strong>
           </mat-error>
         </mat-form-field>
-        <button [disabled]="!formGroup.valid" mat-flat-button color="primary" style="height: 50px; top: -7px;">Add new
-          group</button>
+        <button [disabled]="!formGroup.valid" mat-flat-button color="primary" style="height: 50px; top: -7px;">
+          Add new
+          group
+        </button>
       </form>
       <h1>Registered groups</h1>
       <div>
@@ -20,12 +22,13 @@
             {{group}}
           </div>
           <div class="inline float-right">
-              <mat-icon (click)="onClickDelete(group)">delete_sweep</mat-icon>
+            <mat-icon (click)="onClickDelete(group)">delete_sweep</mat-icon>
           </div>
         </div>
       </div>
     </div>
   </mat-tab>
+  <mat-tab label="Options"></mat-tab>
   <mat-tab label="Words"></mat-tab>
   <mat-tab label="Graphs"></mat-tab>
 </mat-tab-group>

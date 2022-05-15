@@ -9,6 +9,7 @@ import { Dialog } from './dialog.component';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  
   formGroup: any;
   registerGroups: Array<any> = [];
 
