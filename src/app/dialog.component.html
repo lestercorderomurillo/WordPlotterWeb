@@ -1,6 +1,8 @@
-<h1 mat-dialog-title>{{data.title}}</h1>
+<h1 mat-dialog-title><strong>{{data.title}}</strong></h1>
 <div mat-dialog-content>{{data.message}}</div>
 <br>
 <div mat-dialog-actions>
-  <button mat-button mat-dialog-close (click)="onClickCloseDialog()">Close</button>
+  <button mat-dialog-close mat-flat-button color="primary" (click)="onClickCloseDialog()">
+    Close
+  </button>
 </div>

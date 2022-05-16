@@ -1,28 +1,44 @@
 <mat-tab-group>
   <mat-tab label="Groups">
-    <div style="margin: 20px;">
-      <form [formGroup]="formGroup" (ngSubmit)="onClickSubmit(formGroup.value.groupName)" class="group-form">
-        <mat-form-field appearance="fill">
-          <mat-label>Group name</mat-label>
-          <input formControlName="groupName" name="groupName" type="text" matInput>
-          <mat-error *ngIf="formGroup.get('groupName').hasError('required')">
-            This field is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
-        <button [disabled]="!formGroup.valid" mat-flat-button color="primary" style="height: 50px; top: -7px;">
-          Add new
-          group
-        </button>
-      </form>
+    <form [formGroup]="formGroup" (ngSubmit)="onClickSubmitForm(formGroup.value.groupName)">
+      <mat-form-field appearance="fill">
+        <mat-label>Group name</mat-label>
+        <input formControlName="groupName" name="groupName" type="text" matInput>
+        <mat-error *ngIf="this.formGroup.get('groupName').hasError('required')">
+          This field is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <button class="pdf-icon" [disabled]="!formGroup.valid" mat-flat-button color="primary"
+        style="height: 50px; top: -7px;">
+        Add new group
+      </button>
+    </form>
+    <div class="form">
       <h1>Registered groups</h1>
-      <div>
-        <div *ngIf="registerGroups.length == 0">No groups added yet.</div>
-        <div class="pdf-item" *ngFor="let group of registerGroups">
-          <div class="inline">
-            {{group}}
+      <div class="scrollable-y">
+        <div *ngIf="this.registeredGroups.length == 0">No groups added yet.</div>
+        <div *ngFor="let groupName of registeredGroups" class="pdf-item">
+          <div class="inline pad-top">
+            {{groupName}}
+            <!--div *ngIf="groupName in this.registeredFiles; else hasFiles">
+              <div>No files added yet.</div>
+            </div-->
+            <ng-template #hasFiles>
+              <div>Has files?</div>
+            </ng-template>
+            <div *ngFor="let fileName of this.registeredFiles[groupName]; trackBy: trackItem">
+              aaaaaaaaa {{fileName}}
+            </div>
           </div>
           <div class="inline float-right">
-            <mat-icon (click)="onClickDelete(group)">delete_sweep</mat-icon>
+            <input style="display: none;" id="u_{{md5(groupName)}}" type="file"
+              (change)="onFileChange(md5(groupName), $event)">
+            <button class="pdf-icon" mat-flat-button color="secondary" (click)="onClickAddFilesToGroup(groupName)">
+              <mat-icon>cloud_upload</mat-icon>
+            </button>
+            <button class="pdf-icon" mat-flat-button color="secondary" (click)="onClickDeleteGroup(groupName)">
+              <mat-icon>delete_sweep</mat-icon>
+            </button>
           </div>
         </div>
       </div>
