@@ -1,8 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
-
 html,
 body {
     height: 100%;
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.container {
+    display: inline-block;
+    box-sizing: border-box;
+    padding-top: 25px;
+    padding-left: 25px;
+    padding-right: 25px;
+    width: 100%;
+}
+
+.scrollable-y {
+    min-height: 250px;
+    max-height: 650px;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.center {
+    text-align: center;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.pad-top {
+    padding-top: 8px;
+}
+
+.pad-bottom {
+    padding-bottom: 8px;
 }

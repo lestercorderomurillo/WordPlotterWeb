@@ -1,0 +1,18 @@
+.pdf-item {
+    box-sizing: border-box;
+    min-width: 280px;
+    max-width: 585px;
+    width: 100%;
+    background-color: rgb(220, 220, 250);
+    border-radius: 7px;
+    margin-bottom: 10px;
+    padding: 10px;
+    overflow: auto;
+    overflow-y: hidden;
+}
+
+.pdf-icon {
+    margin-top: 6px;
+    margin-left: 6px;
+    margin-right: 6px;
+}

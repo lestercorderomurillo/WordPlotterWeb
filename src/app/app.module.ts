@@ -9,9 +9,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { WordsTabComponent } from './components/wordsTab/wordsTab.component';
+import { GroupTabComponent } from './components/groupsTab/groupsTab.component';
+import { OptionsTabComponent } from './components/optionsTab/optionsTab.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    WordsTabComponent,
+    GroupTabComponent,
+    OptionsTabComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

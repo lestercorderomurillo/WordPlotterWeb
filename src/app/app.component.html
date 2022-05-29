@@ -1,50 +1,18 @@
 <mat-tab-group>
+
   <mat-tab label="Groups">
-    <form [formGroup]="formGroup" (ngSubmit)="onClickSubmitForm(formGroup.value.groupName)">
-      <mat-form-field appearance="fill">
-        <mat-label>Group name</mat-label>
-        <input formControlName="groupName" name="groupName" type="text" matInput>
-        <mat-error *ngIf="this.formGroup.get('groupName').hasError('required')">
-          This field is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-      <button class="pdf-icon" [disabled]="!formGroup.valid" mat-flat-button color="primary"
-        style="height: 50px; top: -7px;">
-        Add new group
-      </button>
-    </form>
-    <div class="form">
-      <h1>Registered groups</h1>
-      <div class="scrollable-y">
-        <div *ngIf="this.registeredGroups.length == 0">No groups added yet.</div>
-        <div *ngFor="let groupName of registeredGroups" class="pdf-item">
-          <div class="inline pad-top">
-            {{groupName}}
-            <!--div *ngIf="groupName in this.registeredFiles; else hasFiles">
-              <div>No files added yet.</div>
-            </div-->
-            <ng-template #hasFiles>
-              <div>Has files?</div>
-            </ng-template>
-            <div *ngFor="let fileName of this.registeredFiles[groupName]; trackBy: trackItem">
-              aaaaaaaaa {{fileName}}
-            </div>
-          </div>
-          <div class="inline float-right">
-            <input style="display: none;" id="u_{{md5(groupName)}}" type="file"
-              (change)="onFileChange(md5(groupName), $event)">
-            <button class="pdf-icon" mat-flat-button color="secondary" (click)="onClickAddFilesToGroup(groupName)">
-              <mat-icon>cloud_upload</mat-icon>
-            </button>
-            <button class="pdf-icon" mat-flat-button color="secondary" (click)="onClickDeleteGroup(groupName)">
-              <mat-icon>delete_sweep</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-group-tab></app-group-tab>
   </mat-tab>
-  <mat-tab label="Options"></mat-tab>
-  <mat-tab label="Words"></mat-tab>
-  <mat-tab label="Graphs"></mat-tab>
+
+  <mat-tab label="Options">
+    <app-options-tab></app-options-tab>
+  </mat-tab>
+
+  <mat-tab label="Words">
+    <app-words-tab></app-words-tab>
+  </mat-tab>
+
+  <mat-tab label="Graphs">
+  </mat-tab>
+
 </mat-tab-group>
