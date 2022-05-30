@@ -1,11 +1,11 @@
-# WordPlotterWeb
+# WordPlotter Web
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.4.
+Este proyecto se generó con [Angular CLI](https://github.com/angular/angular-cli) versión 13.3.4.
 
-## Build
+## Construir
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Ejecute `ng build` para compilar el proyecto. Los artefactos de compilación se almacenarán en el directorio `dist/`.
 
-## Running unit tests
+## Ejecutando pruebas unitarias
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Ejecute `ng test` para ejecutar las pruebas unitarias a través de [Karma](https://karma-runner.github.io).
