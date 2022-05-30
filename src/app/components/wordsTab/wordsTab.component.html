@@ -6,23 +6,23 @@
                 <hr>
             </th>
             <th>
-                Frequency
+                Normalized Frequency
+                <hr>
+            </th>
+            <th>
+                Zipf
                 <hr>
             </th>
         </tr>
-        <tr>
+        <tr *ngFor="let word of words | keyvalue: this.sortByValuePipe">
             <td>
-                MyFirstWord
+                {{word.key}}
             </td>
             <td>
-                3
-            </td>
-        </tr><tr>
-            <td>
-                MySecondWord
+                {{word.value}}
             </td>
             <td>
-                5
+                0
             </td>
         </tr>
     </table>

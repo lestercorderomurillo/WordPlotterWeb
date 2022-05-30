@@ -12,6 +12,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WordsTabComponent } from './components/wordsTab/wordsTab.component';
 import { GroupTabComponent } from './components/groupsTab/groupsTab.component';
 import { OptionsTabComponent } from './components/optionsTab/optionsTab.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,8 @@ import { OptionsTabComponent } from './components/optionsTab/optionsTab.componen
     MatInputModule,
     MatIconModule,
     MatDialogModule,
+    MatSelectModule,
+    MatCheckboxModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

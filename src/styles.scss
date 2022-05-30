@@ -13,6 +13,13 @@ body {
     padding-left: 25px;
     padding-right: 25px;
     width: 100%;
+    overflow-y: hidden;
+}
+
+.card {
+    background-color: rgb(238, 230, 252);
+    border-radius: 4px;
+    padding-bottom: 15px;
 }
 
 .scrollable-y {

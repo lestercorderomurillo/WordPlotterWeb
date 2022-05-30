@@ -1,4 +1,23 @@
 <form class="container">
-    <label>Scatter</label>
-    <input type="checkbox">
+
+    <h2>General Settings</h2>
+    <mat-form-field appearance="fill">
+        <mat-label>Output file extension</mat-label>
+        <mat-select>
+            <mat-option value="PDF" selected>PDF</mat-option>
+            <mat-option value="JPEG">JPEG</mat-option>
+            <mat-option value="PNG">PNG</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <h2>Plots Settings</h2>
+    <section>
+        <mat-checkbox color="primary" class="example-margin">Show a scatter plot.</mat-checkbox>
+    </section>
+    <section>
+        <mat-checkbox color="primary" class="example-margin">Show a bar plot with frequencies.</mat-checkbox>
+    </section>
+    <section>
+        <mat-checkbox color="primary" class="example-margin">Show a bar plot with normalized frequencies.</mat-checkbox>
+    </section>
 </form>
