@@ -1,39 +1,34 @@
 <form class="container" [formGroup]="formGroup" (ngSubmit)="onClickSubmitForm(formGroup.value.groupName)">
     <mat-form-field appearance="fill">
-        <mat-label>Group name</mat-label>
+        <mat-label>Name</mat-label>
         <input formControlName="groupName" name="groupName" type="text" matInput>
         <mat-error *ngIf="this.formGroup.get('groupName')?.hasError('required')">
             This field is <strong>required</strong>
         </mat-error>
     </mat-form-field>
-    <button class="pdf-icon" [disabled]="!this.formGroup.valid" mat-flat-button color="primary"
-        style="height: 50px; top: -7px;">
+    <button [disabled]="!this.formGroup.valid" mat-flat-button color="primary" class="btn" >
         Add new group
     </button>
 </form>
 <div class="container">
-    <h1>Registered groups</h1>
+    <h1>Saved groups</h1>
+    <div *ngIf="this.groups.size === 0">
+        No groups added yet.
+    </div>
     <div class="scrollable-y">
-        <div *ngIf="this.groups.size === 0">
-            No groups added yet.
-        </div>
-
-        <div *ngFor="let group of this.groups | keyvalue" class="pdf-item">
-            
+        <div *ngFor="let group of this.groups | keyvalue" class="card">
             <div class="inline pad-top">
                 <h3><strong>{{group.key}}</strong></h3>
             </div>
             <div class="inline float-right">
                 <input style="display: none;" id="{{md5(group.key)}}" type="file" multiple (change)="onFileChange(group.key, $event)">
-                <button class="pdf-icon" mat-flat-button color="secondary"
-                    (click)="onClickOpenSelectionDialog(group.key)">
+                <button mat-flat-button color="secondary"(click)="onClickOpenSelectionDialog(group.key)">
                     <mat-icon>cloud_upload</mat-icon>
                 </button>
-                <button class="pdf-icon" mat-flat-button color="secondary" (click)="onClickDeleteGroup(group.key)">
+                <button mat-flat-button color="secondary" (click)="onClickDeleteGroup(group.key)">
                     <mat-icon>delete_sweep</mat-icon>
                 </button>
             </div>
-
             <div *ngIf="group.value?.length === 0; else hasFiles">
                 <div>No files added yet.</div>
             </div>

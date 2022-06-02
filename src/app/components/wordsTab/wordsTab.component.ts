@@ -8,13 +8,14 @@ import { WordsService } from 'src/app/services/words.service';
   styleUrls: ['./wordsTab.component.scss'],
 })
 export class WordsTabComponent implements OnInit {
-  public words: any;
+  public words?: Map<string, number>;
 
   constructor(private wordsService: WordsService) {}
 
   ngOnInit(): void {
     this.wordsService.computeWordsFromText(
-      'wants to word and generate a text document with every word and the number of uses for each document'
+      'wants to word and generate a text document with every word and the number of uses for each documen' +
+        'sample sample sample example test a b c 1 2 3 a b c abc abc123 sample 1 2 3 a b c abc abc123 test'
     );
 
     this.words = this.wordsService.getUpdatedFrequency();

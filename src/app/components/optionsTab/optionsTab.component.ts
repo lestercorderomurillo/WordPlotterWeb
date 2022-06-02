@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./optionsTab.component.scss'],
 })
 export class OptionsTabComponent implements OnInit {
+  public outputFileExtension: string = 'PDF';
+  public adjustmentFormula: string = 'Zipf';
+
   constructor() {}
 
   ngOnInit(): void {}
