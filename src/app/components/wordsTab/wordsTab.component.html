@@ -1,26 +1,55 @@
-<div class="container">
-    <table>
-        <tr>
-            <th>
-                Word
-            </th>
-            <th>
-                Freq
-            </th>
-            <th>
-                Zipf
-            </th>
-        </tr>
-        <tr *ngFor="let word of words | keyvalue: this.sortByValuePipe">
-            <td>
-                {{word.key}}
-            </td>
-            <td>
-                {{word.value | number : '1.0-2'}}
-            </td>
-            <td>
-                0
-            </td>
-        </tr>
-    </table>
+<div class="container scrollable-y">
+    <h1>Processed Groups</h1>
+    <div *ngIf="this.wordsGroups?.size === 0">
+        No processed groups added yet.
+    </div>
+    <div class="card" *ngFor="let group of wordsGroups | keyvalue">
+        <h2 style="display: inline;">{{group.key}}</h2>
+        <div style="display: inline;" *ngIf="this.group.value?.size === 0; else hasFiles">
+            No input data available for this group.
+        </div>
+        <ng-template #hasFiles>
+            <button style="display: inline; float: right; top: -5px;" (click)="this.exportCompleteGroup(group.key)"
+                mat-flat-button color="primary">
+                Export complete group
+            </button>
+        </ng-template>
+        <table class="card" *ngFor="let file of group.value | keyvalue">
+            <button (click)="this.exportFileGroup(group.key, file.key)" mat-flat-button color="primary">
+                Export {{ (file.key.length > 25)? (file.key | slice:0:25)+'..':(file.key) }}
+            </button>
+            <br><br>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{file.key}} ({{file.value.size}} words)
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <table style="min-width: 100%;">
+                    <tr>
+                        <th>
+                            Word
+                        </th>
+                        <th>
+                            Rank
+                        </th>
+                        <th>
+                            NormFreq
+                        </th>
+                    </tr>
+                    <tr *ngFor="let wordObject of file.value; let i=index">
+                        <td>
+                            {{wordObject.text}}
+                        </td>
+                        <td>
+                            {{i+1}}
+                        </td>
+                        <td>
+                            {{wordObject.normFreq | number : '1.7'}}
+                        </td>
+                    </tr>
+                </table>
+            </mat-expansion-panel>
+        </table>
+    </div>
 </div>

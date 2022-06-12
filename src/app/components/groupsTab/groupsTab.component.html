@@ -1,43 +1,41 @@
-<form class="container" [formGroup]="formGroup" (ngSubmit)="onClickSubmitForm(formGroup.value.groupName)">
-    <mat-form-field appearance="fill">
-        <mat-label>Name</mat-label>
-        <input formControlName="groupName" name="groupName" type="text" matInput>
-        <mat-error *ngIf="this.formGroup.get('groupName')?.hasError('required')">
-            This field is <strong>required</strong>
-        </mat-error>
-    </mat-form-field>
-    <button [disabled]="!this.formGroup.valid" mat-flat-button color="primary" class="btn" >
-        Add new group
-    </button>
-</form>
 <div class="container">
-    <h1>Saved groups</h1>
-    <div *ngIf="this.groups.size === 0">
-        No groups added yet.
-    </div>
-    <div class="scrollable-y">
+    <form [formGroup]="formGroup" (ngSubmit)="onClickSubmitForm(formGroup.value.groupName)">
+        <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input formControlName="groupName" name="groupName" type="text" matInput>
+            <mat-error *ngIf="this.formGroup.get('groupName')?.hasError('required')">
+                This field is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+        <button [disabled]="!this.formGroup.valid" mat-flat-button color="primary" class="btn">
+            Add new group
+        </button>
+        <h1>Saved groups</h1>
+        <div *ngIf="this.groups.size === 0">
+            No groups added yet.
+        </div>
+    </form>
+    <div class="scrollable-y h100">
         <div *ngFor="let group of this.groups | keyvalue" class="card">
-            <div class="inline pad-top">
+            <div class="inline">
                 <h3><strong>{{group.key}}</strong></h3>
             </div>
             <div class="inline float-right">
-                <input style="display: none;" id="{{md5(group.key)}}" type="file" multiple (change)="onFileChange(group.key, $event)">
-                <button mat-flat-button color="secondary"(click)="onClickOpenSelectionDialog(group.key)">
+                <input style="display: none;" id="{{md5(group.key)}}" type="file" multiple
+                    (change)="onFileChange(group.key, $event)" accept="text/plain, application/pdf">
+                <button mat-flat-button color="primary" (click)="onClickOpenSelectionDialog(group.key)">
                     <mat-icon>cloud_upload</mat-icon>
                 </button>
-                <button mat-flat-button color="secondary" (click)="onClickDeleteGroup(group.key)">
+                <button mat-flat-button color="primary" (click)="onClickDeleteGroup(group.key)">
                     <mat-icon>delete_sweep</mat-icon>
                 </button>
             </div>
             <div *ngIf="group.value?.length === 0; else hasFiles">
-                <div>No files added yet.</div>
+                <div>No input files added yet.</div>
             </div>
             <ng-template #hasFiles>
-                <div>
-                    <h4><strong>Files for this group </strong></h4>
-                </div>
                 <div *ngFor="let file of group.value">
-                    {{file.name}}
+                    {{(file.name.length > 45)? (file.name | slice:0:45) + '..': (file.name)}}
                 </div>
             </ng-template>
         </div>

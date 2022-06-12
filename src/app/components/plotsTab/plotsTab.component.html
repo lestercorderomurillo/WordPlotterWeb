@@ -1,3 +1,15 @@
-<div class="container">
-  <div echarts [options]="chartOption" class="demo-chart"></div>
+<div class="container scrollable-y">
+  <div echarts [options]="defaultScatterPlot" class="chart"></div>
+  <button mat-flat-button color="primary">Export Image (Type)</button>
+  <button mat-flat-button color="primary">Export Data (CVS)</button>
+  <br><br>
+  <div *ngFor="let group of this.groups | keyvalue" class="card">
+    <h2>{{ group.key }}</h2>
+    <div *ngFor="let plotOption of this.plotsOptions.get('test')" class="card">
+      <div echarts [options]="plotOption" class="chart"></div>
+      <button mat-flat-button color="primary">Export Image (Type)</button>
+      <button mat-flat-button color="primary">Export Data (CVS)</button>
+      <br><br>
+    </div>
+  </div>
 </div>

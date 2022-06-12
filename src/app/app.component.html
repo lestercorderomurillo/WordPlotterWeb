@@ -1,19 +1,19 @@
-<mat-tab-group>
+<mat-tab-group dynamicHeight (selectedTabChange)="onTabChanged($event);">
 
   <mat-tab label="Groups">
     <app-group-tab></app-group-tab>
   </mat-tab>
 
   <mat-tab label="Words">
-    <app-words-tab></app-words-tab>
+    <app-words-tab #wordsTab></app-words-tab>
   </mat-tab>
 
-  <mat-tab label="Plots">
-    <app-plots-tab></app-plots-tab>
-  </mat-tab>
+  <!--mat-tab label="Plots">
+    <app-plots-tab #plotsTab></app-plots-tab>
+  </mat-tab-->
 
   <mat-tab label="Options">
-    <app-options-tab></app-options-tab>
+    <app-options-tab ></app-options-tab>
   </mat-tab>
 
 </mat-tab-group>

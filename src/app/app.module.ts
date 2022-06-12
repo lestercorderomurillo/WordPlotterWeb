@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { PlotsTabComponent } from './components/plotsTab/plotsTab.component';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
     WordsTabComponent,
     GroupTabComponent,
     OptionsTabComponent,
-    PlotsTabComponent
+    PlotsTabComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,9 +39,10 @@ import { NgxEchartsModule } from 'ngx-echarts';
     MatDialogModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatExpansionModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'),
-    })
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],

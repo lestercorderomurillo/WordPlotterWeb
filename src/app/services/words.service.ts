@@ -1,62 +1,180 @@
 import { Injectable } from '@angular/core';
+import { FileService } from './file.service';
+import { PdfReaderService } from './pdf-reader.service';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+
+export interface Word {
+  text: string;
+  count: number;
+  normFreq: number;
+}
+
+export type FileWordGroup = Map<string, Set<Word>>;
 
 @Injectable({
   providedIn: 'root',
 })
 export class WordsService {
-  public inputWords: Map<string, number> = new Map<string, number>();
-  public words: Map<string, number> = new Map<string, number>();
+  public wordsGroups: Map<string, FileWordGroup> = new Map<
+    string,
+    FileWordGroup
+  >();
   public lowerCaseInput: boolean = false;
-  public ignoreSymbolsFromInput: boolean = false;
 
-  constructor() {}
+  constructor(
+    private fileService: FileService,
+    private pdfReaderService: PdfReaderService
+  ) {}
 
-  computeWordsFromText(input: string) {
-    const words = input.split(' ');
-
-    words.forEach((word) =>
-      this.words.set(word, (this.words.get(word) || 0) + 1)
-    );
-
-    this.words = this.sortByValue();
-    this.words = this.normalizeSortedFrequency();
+  public async updateAllWordsGroups(): Promise<void> {
+    let inMemoryBackup = new Map(this.wordsGroups);
+    inMemoryBackup.forEach((wordGroup, groupName) => {
+      this.extractTextFromInputFiles(groupName).then((fileTexts) => {
+        this.wordsGroups.set(groupName, this.computeWordGroup(fileTexts));
+      });
+    });
   }
 
-  sortByValue() {
-    const sorted = [...this.words].sort((prev, next) =>
-      next[1] === prev[1] ? prev[0].localeCompare(next[0]) : next[1] - prev[1]
-    );
+  public async deleteWordGroup(groupName: string) {
+    this.wordsGroups.delete(groupName);
+  }
 
-    let bufferWords: Map<string, number> = new Map<string, number>();
+  public async updateWordsForGroup(groupName: string): Promise<void> {
+    let fileTexts = await this.extractTextFromInputFiles(groupName);
+    this.wordsGroups.set(groupName, this.computeWordGroup(fileTexts));
+  }
 
-    sorted.forEach((entry) => {
-      let wordSorted = entry[0];
-      let freqSorted = entry[1];
-      bufferWords.set(wordSorted, freqSorted);
+  private async extractTextFromInputFiles(
+    groupName: string
+  ): Promise<Map<string, string>> {
+    const output = new Map<string, string>();
+    const fileList: FileList = this.fileService.getGroup(groupName);
+    let promises: Promise<Array<any>>[] = [];
+
+    for (let i = 0; i < fileList?.length; i++) {
+      let filePath = fileList[i];
+
+      promises.push(
+        new Promise((resolve, reject) => {
+          filePath
+            .arrayBuffer()
+            .then((buffer: ArrayBuffer) => {
+              return this.pdfReaderService.readPdf(buffer).then((text) => {
+                text = text.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');
+                resolve([filePath.name, text]);
+              });
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        })
+      );
+
+      let dataArr = await Promise.all(promises);
+      dataArr.forEach((entry) => {
+        output.set(entry[0], entry[1]);
+      });
+    }
+
+    return output;
+  }
+
+  private computeWordGroup(filesMap: Map<string, string>) {
+    let fileWordGroup: FileWordGroup = new Map<string, Set<Word>>();
+    filesMap.forEach((text, fileName) => {
+      fileWordGroup.set(fileName, this.computeWordsFrom(text));
     });
 
-    return bufferWords;
+    return fileWordGroup;
   }
 
-  normalizeSortedFrequency() {
-    let bufferWords: Map<string, number> = new Map<string, number>();
-
-    this.words.forEach((entry, key) => {
-      const value: number = entry / this.words.size;
-      bufferWords.set(key, value);
-    });
-
-    return bufferWords;
-  }
-
-  isRealWord(word: string) {
-    const regex = new RegExp(/[a-zA-Z]{2,}|a|A$/);
+  private isRealWord(word: string): boolean {
+    const regex = new RegExp(/[a-zA-zÀ-ú]{2,}|a|A/);
     return regex.test(word);
   }
 
-  addToIgnoredWords(words: string[]) {}
+  private computeWordsFrom(text: string): Set<Word> {
+    let wordsSet = new Set<Word>();
+    let wordsMap = new Map<string, Word>();
+    const words = text.replace(/[^a-zA-zÀ-ú\s]/g, '').split(/\s+/);
+    words.forEach((word) => {
+      if (this.lowerCaseInput === true) {
+        word = word.toLowerCase();
+      }
+      word = word.replace(/[\s]/g, '');
+      if (this.isRealWord(word)) {
+        if (wordsMap.has(word)) {
+          let wordObj = wordsMap.get(word);
+          wordObj!.count++;
+          wordsMap.set(word, wordObj!);
+        } else {
+          let wordObj = {
+            text: word,
+            count: 1,
+            normFreq: 0,
+          };
+          wordsMap.set(word, wordObj!);
+        }
+      }
+    });
 
-  getUpdatedFrequency() {
-    return this.words;
+    this.sortByFrequency(this.computeNormalizedFrequency(wordsMap)).forEach(
+      (wordObj) => {
+        wordsSet.add(wordObj);
+      }
+    );
+
+    return wordsSet;
+  }
+
+  private computeNormalizedFrequency(
+    words: Map<string, Word>
+  ): Map<string, Word> {
+    words.forEach((word) => {
+      word.normFreq = word.count / words.size;
+    });
+
+    return words;
+  }
+
+  private sortByFrequency(words: Map<string, Word>): Map<string, Word> {
+    const sorted = [...words].sort((prev, next) =>
+      next[1] === prev[1]
+        ? prev[0].localeCompare(next[0])
+        : next[1].count - prev[1].count
+    );
+    let bufferWords = new Map<string, Word>();
+    sorted.forEach((entry) => {
+      bufferWords.set(entry[0], entry[1]);
+    });
+    return bufferWords;
+  }
+
+  public exportCompleteGroup(groupName: string) {
+    const fileWordGroup = this.wordsGroups.get(groupName);
+    let data = new Array();
+    data.push(['GroupName','FileName', 'Word', 'Rank', 'normFreq']);
+    fileWordGroup?.forEach((wordGroup: Set<Word>, fileName:string) => {
+      let rank = 1;
+      wordGroup.forEach((word) => {
+        data.push([groupName, fileName, word.text, rank++, word.normFreq]);
+      });
+    });
+    new AngularCsv(data, groupName);
+  }
+
+  public exportFileGroup(groupName: string, fileName: string) {
+    const fileWordGroup = this.wordsGroups.get(groupName);
+    const wordGroup = fileWordGroup?.get(fileName);
+
+    let data = new Array();
+    data.push(['FileName', 'Word', 'Rank', 'normFreq']);
+
+    let rank = 1;
+    wordGroup?.forEach((word) => {
+      data.push([fileName, word.text, rank++, word.normFreq]);
+    });
+
+    new AngularCsv(data, fileName);
   }
 }

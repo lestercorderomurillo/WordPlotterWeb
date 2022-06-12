@@ -1,8 +1,8 @@
 <form class="container">
-    <h2>General Settings</h2>
-    <mat-form-field appearance="fill">
+    <h2>Application Settings</h2>
+    <!--mat-form-field appearance="fill">
         <mat-label>Output file extension</mat-label>
-        <mat-select [(value)]="outputFileExtension">
+        <mat-select disabled [(value)]="outputFileExtension">
             <mat-option value="PDF">PDF</mat-option>
             <mat-option value="JPEG">JPEG</mat-option>
             <mat-option value="PNG">PNG</mat-option>
@@ -11,54 +11,22 @@
     <br>
     <mat-form-field appearance="fill">
         <mat-label>Adjustment formula</mat-label>
-        <mat-select [(value)]="adjustmentFormula">
+        <mat-select disabled [(value)]="formula">
             <mat-option value="Zipf">Zipf-Mandelbrot law</mat-option>
         </mat-select>
     </mat-form-field>
-    <br>
-    <h2>Plots Settings</h2>
+    <br-->
     <section>
-        <mat-checkbox color="primary">Generate group plots.</mat-checkbox>
-    </section>
-    <section>
-        <mat-checkbox color="primary">Show a scatter plot per group.</mat-checkbox>
-    </section>
-    <section>
-        <mat-checkbox color="primary">Show a bar plot with frequencies per group.</mat-checkbox>
-    </section>
-    <section>
-        <mat-checkbox color="primary">Show a bar plot with normalized frequencies per group.</mat-checkbox>
-    </section>
-    <br>
-    <h2>Words Ruleset</h2>
-    <section>
-        <mat-checkbox color="primary">Lowercase all the words from input.</mat-checkbox>
-    </section>
-    <section>
-        <mat-checkbox color="primary">Allow only real words. (A-z characters)</mat-checkbox>
-    </section>
-    <br>
-    <section>
-        <mat-label><strong>Excluded words/characters: </strong></mat-label>
-    </section>
-    <br>
-    <button mat-flat-button color="primary">
-        Add
-    </button>
-    <button mat-flat-button color="primary">
-        Clear
-    </button>
-    <button mat-flat-button color="primary">
-        Load (Additive)
-    </button>
-    <button mat-flat-button color="primary">
-        Save
-    </button>
-    <br><br>
-    <section>
-        <mat-label>No excluded words yet.</mat-label>
+        <mat-checkbox [(ngModel)]="this.lowercaseInput" (ngModelChange)="this.updateOptions()" name="lowercaseInput"
+            color="primary">Lowercase all the words from input.</mat-checkbox>
     </section>
     <!--section>
-        <mat-label class="italic">word</mat-label>
-    </section--!-->
+        <mat-checkbox disabled [(ngModel)]="this.showScatterPlots" name="showScatterPlots" color="primary">Show a
+            scatter plot per group.</mat-checkbox>
+    </section>
+    <section>
+        <mat-checkbox disabled [(ngModel)]="this.showBarPlots" name="showBarPlots" color="primary">Show a bar plot per
+            group. </mat-checkbox>
+    </section-->
+    <br>
 </form>
