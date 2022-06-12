@@ -151,16 +151,28 @@ export class WordsService {
   }
 
   public exportCompleteGroup(groupName: string) {
-    const fileWordGroup = this.wordsGroups.get(groupName);
-    let data = new Array();
-    data.push(['GroupName','FileName', 'Word', 'Rank', 'normFreq']);
-    fileWordGroup?.forEach((wordGroup: Set<Word>, fileName:string) => {
-      let rank = 1;
-      wordGroup.forEach((word) => {
-        data.push([groupName, fileName, word.text, rank++, word.normFreq]);
+    let fileTexts = '';
+    this.extractTextFromInputFiles(groupName).then((file) => {
+      file.forEach((fileText) => {
+        fileTexts += fileText;
       });
+      
+      const map = new Map<string, string>();
+      map.set(groupName, fileTexts);
+
+      const fileWordGroup = this.computeWordGroup(map);
+      let data = new Array();
+
+      data.push(['GroupName', 'Word', 'Rank', 'normFreq']);
+      fileWordGroup?.forEach((wordGroup: Set<Word>) => {
+        let rank = 1;
+        wordGroup.forEach((word) => {
+          data.push([groupName, word.text, rank++, word.normFreq]);
+        });
+      });
+
+      new AngularCsv(data, groupName);
     });
-    new AngularCsv(data, groupName);
   }
 
   public exportFileGroup(groupName: string, fileName: string) {
