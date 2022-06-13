@@ -1,32 +1,8 @@
 <form class="container">
     <h2>Application Settings</h2>
-    <!--mat-form-field appearance="fill">
-        <mat-label>Output file extension</mat-label>
-        <mat-select disabled [(value)]="outputFileExtension">
-            <mat-option value="PDF">PDF</mat-option>
-            <mat-option value="JPEG">JPEG</mat-option>
-            <mat-option value="PNG">PNG</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <br>
-    <mat-form-field appearance="fill">
-        <mat-label>Adjustment formula</mat-label>
-        <mat-select disabled [(value)]="formula">
-            <mat-option value="Zipf">Zipf-Mandelbrot law</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <br-->
+    <h5>Version experimental 1.0</h5>
     <section>
-        <mat-checkbox [(ngModel)]="this.lowercaseInput" (ngModelChange)="this.updateOptions()" name="lowercaseInput"
-            color="primary">Lowercase all the words from input.</mat-checkbox>
+        <mat-checkbox [(ngModel)]="this.lowercaseInput" (ngModelChange)="this.updateOptions()" name="lowercaseInput" color="primary">Lowercase all the words from input.</mat-checkbox>
     </section>
-    <!--section>
-        <mat-checkbox disabled [(ngModel)]="this.showScatterPlots" name="showScatterPlots" color="primary">Show a
-            scatter plot per group.</mat-checkbox>
-    </section>
-    <section>
-        <mat-checkbox disabled [(ngModel)]="this.showBarPlots" name="showBarPlots" color="primary">Show a bar plot per
-            group. </mat-checkbox>
-    </section-->
     <br>
 </form>

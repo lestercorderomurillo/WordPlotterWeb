@@ -54,21 +54,36 @@ export class WordsService {
     for (let i = 0; i < fileList?.length; i++) {
       let filePath = fileList[i];
 
-      promises.push(
-        new Promise((resolve, reject) => {
-          filePath
-            .arrayBuffer()
-            .then((buffer: ArrayBuffer) => {
-              return this.pdfReaderService.readPdf(buffer).then((text) => {
-                text = text.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');
-                resolve([filePath.name, text]);
+      if (filePath.type === 'application/pdf') {
+        promises.push(
+          new Promise((resolve, reject) => {
+            filePath
+              .arrayBuffer()
+              .then((buffer: ArrayBuffer) => {
+                return this.pdfReaderService.readPdf(buffer).then((text) => {
+                  text = text.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');
+                  resolve([filePath.name, text]);
+                });
+              })
+              .catch((error) => {
+                reject(error);
               });
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        })
-      );
+          })
+        );
+      }else if(filePath.type === 'text/plain'){
+        promises.push(
+          new Promise((resolve, reject) => {
+            filePath
+              .text()
+              .then((text) => {
+                resolve([filePath.name, text]);
+              })
+              .catch((error) => {
+                reject(error);
+              });
+          })
+        );
+      }
 
       let dataArr = await Promise.all(promises);
       dataArr.forEach((entry) => {
