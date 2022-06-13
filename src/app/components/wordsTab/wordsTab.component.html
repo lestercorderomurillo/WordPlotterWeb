@@ -14,7 +14,7 @@
         <ng-template #hasFiles>
             <button style="display: inline; float: right; top: -5px;" (click)="this.exportCompleteGroup(group.key)"
                 mat-flat-button color="primary">
-                Export group
+                Export combined dataset
             </button>
         </ng-template>
         <table class="card" *ngFor="let file of group.value | keyvalue">
