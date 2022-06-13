@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FileWordGroup, WordsService } from 'src/app/services/words.service';
+import { WordsService } from 'src/app/services/words.service';
 
 @Component({
   selector: 'app-words-tab',
@@ -7,7 +7,7 @@ import { FileWordGroup, WordsService } from 'src/app/services/words.service';
   styleUrls: ['./wordsTab.component.scss'],
 })
 export class WordsTabComponent {
-  public wordsGroups?: Map<string, FileWordGroup>;
+  //public wordsGroups?: Map<string, FileWordGroup>;
 
   constructor(private wordsService: WordsService) {}
 
@@ -16,7 +16,10 @@ export class WordsTabComponent {
   }
 
   update() {
-    this.wordsGroups = this.wordsService.wordsGroups;
+  }
+
+  public get wordsGroups() {
+    return this.wordsService.wordsGroups;
   }
 
   public exportFileGroup(groupName: string, fileName: string) {
