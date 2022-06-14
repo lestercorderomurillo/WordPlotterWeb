@@ -7,15 +7,11 @@ import { WordsService } from 'src/app/services/words.service';
   styleUrls: ['./wordsTab.component.scss'],
 })
 export class WordsTabComponent {
-  //public wordsGroups?: Map<string, FileWordGroup>;
 
   constructor(private wordsService: WordsService) {}
 
   sortByValuePipe(): number {
     return 0;
-  }
-
-  update() {
   }
 
   public get wordsGroups() {

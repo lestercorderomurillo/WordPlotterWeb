@@ -69,8 +69,6 @@ export class PlotsTabComponent implements OnInit {
   };
 
   constructor(private fileService: FileService) {}
-
-  update() {}
   
   ngOnInit() {
 

@@ -12,13 +12,4 @@ export class AppComponent {
   @ViewChild('wordsTab') wordsTab!: WordsTabComponent;
   @ViewChild('plotsTab') plotsTab!: PlotsTabComponent;
   @ViewChild('options') optionsTab!: OptionsTabComponent;
-
-  onTabChanged(event: any) {
-    if (event.index == 1){
-      this.wordsTab.update();
-    }
-    if (event.index == 3){
-      this.plotsTab.update();
-    }
-  }
 }

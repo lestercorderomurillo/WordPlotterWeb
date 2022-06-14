@@ -70,7 +70,7 @@ export class WordsService {
               });
           })
         );
-      }else if(filePath.type === 'text/plain'){
+      } else if (filePath.type === 'text/plain') {
         promises.push(
           new Promise((resolve, reject) => {
             filePath
@@ -94,7 +94,7 @@ export class WordsService {
     return output;
   }
 
-  private computeWordGroup(filesMap: Map<string, string>) {
+  private computeWordGroup(filesMap: Map<string, string>): FileWordGroup {
     let fileWordGroup: FileWordGroup = new Map<string, Set<Word>>();
     filesMap.forEach((text, fileName) => {
       fileWordGroup.set(fileName, this.computeWordsFrom(text));
@@ -104,8 +104,69 @@ export class WordsService {
   }
 
   private isRealWord(word: string): boolean {
-    const regex = new RegExp(/[a-zA-zÀ-ú]{2,}|a|A/);
-    return regex.test(word);
+    const regex = new RegExp(/[a-zA-z]{2,}|a|A/);
+    const regexWeird = new RegExp(/[\[\]\{\}]/);
+    if (regex.test(word)) {
+      const isWeirdText = regexWeird.test(word.toLowerCase());
+      const excludeWords = [
+        'i',
+        'ii',
+        'iii',
+        'xxx',
+        'www'
+      ];
+
+      const allowedTwoWords = [
+        'ab',
+        'ad',
+        'ah',
+        'am',
+        'an',
+        'as',
+        'aw',
+        'at',
+        'be',
+        'to',
+        'by',
+        'do',
+        'go',
+        'if',
+        'in',
+        'is',
+        'it',
+        'no',
+        'of',
+        'on',
+        'or',
+        'so',
+        'id',
+        'my',
+        'me',
+        'og',
+        'ok',
+        'op',
+        'os',
+        'uh',
+        'um',
+        'us',
+        'we',
+        'si',
+        'ma',
+        'js',
+        'io',
+        'ha',
+        'ex',
+        'yo',
+        'bi',
+        'ai',
+      ];
+      let isEngWord = true;
+      if (word.length == 2) {
+        isEngWord = allowedTwoWords.includes(word.toLowerCase());
+      }
+      return !isWeirdText && isEngWord && !excludeWords.includes(word.toLowerCase());
+    }
+    return false;
   }
 
   private computeWordsFrom(text: string): Set<Word> {
@@ -166,28 +227,32 @@ export class WordsService {
   }
 
   public exportCompleteGroup(groupName: string) {
-    let fileTexts = '';
-    this.extractTextFromInputFiles(groupName).then((file) => {
-      file.forEach((fileText) => {
-        fileTexts += fileText;
-      });
-      
-      const map = new Map<string, string>();
-      map.set(groupName, fileTexts);
+    let groupWords = new Map<string, Word>();
 
-      const fileWordGroup = this.computeWordGroup(map);
-      let data = new Array();
-
-      data.push(['GroupName', 'Word', 'Rank', 'normFreq']);
-      fileWordGroup?.forEach((wordGroup: Set<Word>) => {
-        let rank = 1;
-        wordGroup.forEach((word) => {
-          data.push([groupName, word.text, rank++, word.normFreq]);
+    this.wordsGroups.forEach((wordGroup: FileWordGroup, groupName) => {
+      wordGroup.forEach((words: Set<Word>, fileName) => {
+        words.forEach((word) => {
+          if (groupWords.has(word.text)) {
+            let wordObj = groupWords.get(word.text);
+            wordObj!.count += word.count;
+            groupWords.set(word.text, wordObj!);
+          } else {
+            groupWords.set(word.text, word);
+          }
         });
       });
-
-      new AngularCsv(data, groupName);
     });
+
+    groupWords = this.computeNormalizedFrequency(groupWords);
+
+    let data = new Array();
+    let rank = 1;
+    data.push(['GroupName', 'Word', 'Rank', 'normFreq']);
+    groupWords?.forEach((word, key) => {
+      data.push([groupName, word.text, rank, word.normFreq]);
+    });
+
+    new AngularCsv(data, groupName);
   }
 
   public exportFileGroup(groupName: string, fileName: string) {
