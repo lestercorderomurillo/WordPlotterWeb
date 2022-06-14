@@ -249,7 +249,7 @@ export class WordsService {
     let rank = 1;
     data.push(['GroupName', 'Word', 'Rank', 'normFreq']);
     groupWords?.forEach((word, key) => {
-      data.push([groupName, word.text, rank, word.normFreq]);
+      data.push([groupName, word.text, rank++, word.normFreq]);
     });
 
     new AngularCsv(data, groupName);
