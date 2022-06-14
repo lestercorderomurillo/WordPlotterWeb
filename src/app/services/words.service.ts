@@ -105,16 +105,11 @@ export class WordsService {
 
   private isRealWord(word: string): boolean {
     const regex = new RegExp(/[a-zA-z]{2,}|a|A/);
+    const failedCases = new RegExp(/[^a-zA-z]+/);
     const regexWeird = new RegExp(/[\[\]\{\}]/);
-    if (regex.test(word)) {
+    if (regex.test(word) && !failedCases.test(word)) {
       const isWeirdText = regexWeird.test(word.toLowerCase());
-      const excludeWords = [
-        'i',
-        'ii',
-        'iii',
-        'xxx',
-        'www'
-      ];
+      const excludeWords = ['i', 'ii', 'iii', 'xxx', 'www'];
 
       const allowedTwoWords = [
         'ab',
@@ -164,7 +159,12 @@ export class WordsService {
       if (word.length == 2) {
         isEngWord = allowedTwoWords.includes(word.toLowerCase());
       }
-      return !isWeirdText && isEngWord && !excludeWords.includes(word.toLowerCase());
+      return (
+        word.length <= 22 &&
+        !isWeirdText &&
+        isEngWord &&
+        !excludeWords.includes(word.toLowerCase())
+      );
     }
     return false;
   }
@@ -172,7 +172,7 @@ export class WordsService {
   private computeWordsFrom(text: string): Set<Word> {
     let wordsSet = new Set<Word>();
     let wordsMap = new Map<string, Word>();
-    const words = text.replace(/[^a-zA-zÀ-ú\s]/g, '').split(/\s+/);
+    const words = text.split(/\s+/);
     words.forEach((word) => {
       if (this.lowerCaseInput === true) {
         word = word.toLowerCase();
@@ -249,7 +249,9 @@ export class WordsService {
     let rank = 1;
     data.push(['GroupName', 'Word', 'Rank', 'normFreq']);
     groupWords?.forEach((word, key) => {
-      data.push([groupName, word.text, rank++, word.normFreq]);
+      if (this.isRealWord(word.text)) {
+        data.push([groupName, word.text, rank++, word.normFreq]);
+      }
     });
 
     new AngularCsv(data, groupName);
