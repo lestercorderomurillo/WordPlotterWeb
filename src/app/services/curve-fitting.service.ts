@@ -34,7 +34,7 @@ export class CurveFittingService {
       }
     });
 
-    return { wordsMap , numberOfWords};
+    return { wordsMap, numberOfWords };
   }
 
   public sortGroupByFrequency(words: Map<string, Word>): Map<string, Word> {
@@ -67,23 +67,21 @@ export class CurveFittingService {
 
     if (fitName === 'zipfmandelbrot') {
       let sampleValues = new Array<number>();
-      let sample = [...values].slice(0, 35).concat([...values].reverse().slice(0, 20));
+      let sample = [...values].slice(0, 50).concat([...values].reverse().slice(0, 30));
       sample.forEach((entry) => {
         sampleValues.push(entry[1].normFreq);
       });
 
       let alpha = 0;
       let beta = 0;
-      //let averageError = 0;
 
       for (let constant = 0.0; constant < 1; constant += 0.005) {
         await new Promise((resolve) => setTimeout(resolve, 0));
 
         for (alpha = 0.2; alpha < 1; alpha += 0.01) {
           for (beta = 0.75; beta < 1; beta += 0.01) {
-
             let rank = 1;
-            
+
             let averageError = 0;
             sampleValues.forEach((word) => {
               averageError += (this.calcZipfmandelbrot(rank++, alpha, beta, constant) - word) ** 2;
