@@ -67,7 +67,7 @@ export class CurveFittingService {
 
     if (fitName === 'zipfmandelbrot') {
       let sampleValues = new Array<number>();
-      let sample = [...values].slice(0, 40).concat([...values].reverse().slice(0, 25));
+      let sample = [...values].slice(0, 50).concat([...values].reverse().slice(0, 15));
       sample.forEach((entry) => {
         sampleValues.push(entry[1].normFreq);
       });
