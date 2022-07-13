@@ -1,15 +1,14 @@
 <div class="container scrollable-y">
-  <div echarts [options]="defaultScatterPlot" class="chart"></div>
-  <button mat-flat-button color="primary">Export Image (Type)</button>
-  <button mat-flat-button color="primary">Export Data (CVS)</button>
-  <br><br>
-  <div *ngFor="let group of this.groups | keyvalue" class="card">
-    <h2>{{ group.key }}</h2>
-    <div *ngFor="let plotOption of this.plotsOptions.get('test')" class="card">
-      <div echarts [options]="plotOption" class="chart"></div>
-      <button mat-flat-button color="primary">Export Image (Type)</button>
-      <button mat-flat-button color="primary">Export Data (CVS)</button>
-      <br><br>
+  <h1>Regression Plots</h1>
+  <div *ngIf="this.groups.size == 0">
+    No plots available yet.
+  </div>
+  <div class="chart-container-of">
+    <div *ngFor="let group of this.groups | keyvalue" class="card chart-container">
+      <app-loader [visible]="this.awaitingGroups.has(group.key)" [text]="this.awaitingGroups?.get(group.key)"></app-loader>
+      <div [ngClass]="this.awaitingGroups.has(group.key) ? 'hidden' : ''">
+        <div echarts [options]="this.plots?.get(group.key)!" class="chart"></div>
+      </div>
     </div>
   </div>
 </div>

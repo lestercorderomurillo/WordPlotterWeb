@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { FileService } from 'src/app/services/file.service';
-import { WordsService } from 'src/app/services/words.service';
+import { DataService } from 'src/app/services/data.service';
+import { FileStoreService } from 'src/app/services/file-store.service';
+import { PlotsService } from 'src/app/services/plots.service';
 import { Md5 } from 'ts-md5';
 import { Dialog } from '../dialogs/dialogs.component';
 
@@ -14,11 +15,7 @@ import { Dialog } from '../dialogs/dialogs.component';
 export class GroupTabComponent implements OnInit {
   public formGroup: FormGroup = new FormGroup({});
 
-  constructor(
-    private dialog: MatDialog,
-    private fileService: FileService,
-    private wordsService: WordsService
-  ) {}
+  constructor(private dialog: MatDialog, private fileStoreService: FileStoreService, private dataService: DataService, private plotsService: PlotsService) {}
 
   ngOnInit() {
     this.formGroup = new FormGroup({
@@ -26,35 +23,37 @@ export class GroupTabComponent implements OnInit {
     });
   }
 
-  onClickSubmitForm(groupName: any) {
-    if (!this.fileService.hasGroup(groupName)) {
-      this.fileService.addGroup(groupName);
-      this.wordsService.updateWordsForGroup(groupName);
+  onClickCreateGroup(groupName: any) {
+    if (!this.fileStoreService.exists(groupName)) {
+      this.fileStoreService.create(groupName);
+      this.dataService.createGroup(groupName);
     } else {
       this.dialog.open(Dialog, {
         data: {
           title: 'Oops, error!',
-          message:
-            'The group already exists. Please use another name for that group.',
+          message: 'The group already exists. Please use another name instead!',
         },
       });
     }
+
+    this.plotsService.updatePlotsForGroup(groupName);
   }
 
-  onFileChange(groupName: string, event: any) {
-    this.fileService.addFilesToGroup(groupName, event.target.files);
-    this.wordsService.updateWordsForGroup(groupName);
+  async onFileChange(groupName: string, event: any) {
+    this.fileStoreService.delete(groupName);
+    this.fileStoreService.submitFiles(groupName, event.target.files);
+    await this.dataService.processGroup(groupName);
+    this.plotsService.updatePlotsForGroup(groupName);
   }
 
   onClickDeleteGroup(groupName: any) {
-    this.fileService.removeGroup(groupName);
-    this.wordsService.deleteWordGroup(groupName);
+    this.fileStoreService.delete(groupName);
+    this.dataService.deleteGroup(groupName);
+    this.plotsService.updatePlotsForGroup(groupName);
   }
 
   onClickOpenSelectionDialog(groupName: string) {
-    let element: HTMLElement = document.getElementById(
-      this.md5(groupName)
-    ) as HTMLElement;
+    let element: HTMLElement = document.getElementById(this.md5(groupName)) as HTMLElement;
     element.click();
   }
 
@@ -66,7 +65,19 @@ export class GroupTabComponent implements OnInit {
     return item.trackId;
   }
 
-  get groups() {
-    return this.fileService.getAllGroups();
+  public get awaitingGroups() {
+    return this.dataService.awaitingGroups;
+  }
+
+  public get wordsGroups() {
+    return this.dataService.groups;
+  }
+
+  public get fileStoreServiceAccesor() {
+    return this.fileStoreService;
+  }
+
+  public get files() {
+    return this.fileStoreService.storedFiles;
   }
 }

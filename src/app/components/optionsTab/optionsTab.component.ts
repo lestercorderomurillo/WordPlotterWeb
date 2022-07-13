@@ -1,29 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { WordsService } from 'src/app/services/words.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-options-tab',
   templateUrl: './optionsTab.component.html',
   styleUrls: ['./optionsTab.component.scss'],
 })
-export class OptionsTabComponent implements OnInit {
-  public outputFileExtension: string = 'PDF';
-  public formula: string = 'Zipf';
-  public showGroupsPlots: boolean = true;
-  public lowercaseInput: boolean = true;
+export class OptionsTabComponent{
 
-  /*public showScatterPlots: boolean = false;
-  public showBarPlots: boolean = false;*/
+  constructor(private dataService: DataService) {}
 
-  constructor(private wordsService: WordsService) {}
-
-  public ngOnInit(): void {
-    this.wordsService.lowerCaseInput = this.lowercaseInput;
+  get lowercaseWords(){
+    return this.dataService.options.lowercaseWords;
   }
 
-  public updateOptions(): void {
-    //this.wordsService.showGroupsPlots = this.showGroupsPlots;*/
-    this.wordsService.lowerCaseInput = this.lowercaseInput;
-    this.wordsService.updateAllWordsGroups();
+  set lowercaseWords(value){
+    this.dataService.options.lowercaseWords = value;
   }
 }

@@ -1,58 +1,88 @@
 <div class="container scrollable-y">
-    <h4>Disclaimer: Some changes may take a while to appear here when working with large datasets.</h4>
-    <h4>Exporting the data to CVS for complete groups may also take a while.</h4>
-    <h1>Datasets Groups</h1>
-    <div *ngIf="this.wordsGroups?.size === 0">
+    <h1>Word Groups</h1>
+    <div *ngIf="this.awaitingGroups?.size === 0 && this.wordsGroups?.size === 0">
         No processed groups added yet.
     </div>
     <div class="card" *ngFor="let group of wordsGroups | keyvalue">
-        <h2 style="display: inline;">{{group.key}}</h2>
-        <div style="display: inline;" *ngIf="this.group.value?.size === 0; else hasFiles">
-            <br>
-            No input data available for this group.
+        <div style="display: flex;">
+            <h2 style="position: relative; top:10px; left: 2px; width: calc(100% - 185px);">
+                {{group.key}}
+            </h2>
+            <div style="width: 185px;">
+                <button *ngIf="group.value.children.size !== 0 && !this.awaitingGroups.has(group.key)" (click)="this.exportGroup(group.key)" mat-flat-button
+                    color="primary">
+                    Merge and export &nbsp;&nbsp;
+                    <mat-icon>cloud_download</mat-icon>
+                </button>
+            </div>
         </div>
-        <ng-template #hasFiles>
-            <button style="display: inline; float: right; top: -5px;" (click)="this.exportCompleteGroup(group.key)"
-                mat-flat-button color="primary">
-                Export combined dataset
-            </button>
-        </ng-template>
-        <table class="card" *ngFor="let file of group.value | keyvalue">
-            <button (click)="this.exportFileGroup(group.key, file.key)" mat-flat-button color="primary">
-                Export {{ (file.key.length > 25)? (file.key | slice:0:25)+'..':(file.key) }}
-            </button>
-            <br><br>
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        {{ (file.key.length > 25)? (file.key | slice:0:25)+'..':(file.key) }} ({{file.value.size}} words)
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <table style="min-width: 100%;">
-                    <tr>
-                        <th>
-                            Word
-                        </th>
-                        <th>
-                            Rank
-                        </th>
-                        <th>
-                            NormFreq
-                        </th>
-                    </tr>
-                    <tr *ngFor="let wordObject of file.value; let i=index">
-                        <td>
-                            {{wordObject.text}}
-                        </td>
-                        <td>
-                            {{i+1}}
-                        </td>
-                        <td>
-                            {{wordObject.normFreq | number : '1.7'}}
-                        </td>
-                    </tr>
-                </table>
-            </mat-expansion-panel>
-        </table>
+        <br>
+        <div *ngIf="!this.awaitingGroups.has(group.key) && group.value.children.size === 0">
+            No processed input words for this group yet.
+        </div>
+        <app-loader [visible]="this.awaitingGroups.has(group.key)" [text]="this.awaitingGroups?.get(group.key)">
+        </app-loader>
+        <div *ngIf="!this.awaitingGroups.has(group.key)">
+            <mat-accordion *ngFor="let file of group.value.children | keyvalue">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header collapsedHeight="75px" expandedHeight="75px">
+                        <mat-panel-title>
+                            <div class="truncated" style="font-size: smaller; width: 100%; min-width: 75px;">
+                                {{ file.key }}
+                            </div>
+                        </mat-panel-title>
+                        <mat-panel-description class="exportPanel">
+                            <button (click)="this.exportDataGroup(group.key, file.key, $event)" mat-flat-button
+                                color="excel">
+                                Export &nbsp;&nbsp;
+                                <mat-icon>cloud_download</mat-icon>
+                            </button>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div>
+                        Sample of top 10 words from {{ file.value.wordsMap.size }} total words
+                    </div>
+                    <br>
+                    <div>
+                        <strong>C: </strong>{{this.getDataGroup(group.key, file.key)?.constant | number:'1.2'}}
+                        <strong>α:</strong> {{this.getDataGroup(group.key, file.key)?.alpha | number:'1.2'}}
+                        <strong>β:</strong> {{this.getDataGroup(group.key, file.key)?.beta | number:'1.2'}}
+                        <strong>R²:</strong> {{this.getDataGroup(group.key, file.key)?.rSquared | number:'1.2'}}
+                    </div>
+                    <table style="min-width: 100%; font-size: smaller;">
+                        <br>
+                        <tr>
+                            <th>
+                                Word
+                            </th>
+                            <th>
+                                Rank
+                            </th>
+                            <th>
+                                Real
+                            </th>
+                            <th>
+                                Predicted
+                            </th>
+                        </tr>
+                        <tr
+                            *ngFor="let word of file.value.wordsMap | keyvalue: sortByValuePipe | slice:0:10; let i=index">
+                            <td>
+                                {{word.key}}
+                            </td>
+                            <td>
+                                {{i+1}}
+                            </td>
+                            <td>
+                                {{word.value.normFreq | number : '1.5'}}
+                            </td>
+                            <td>
+                                {{word.value.fittedFreq | number : '1.5'}}
+                            </td>
+                        </tr>
+                    </table>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
     </div>
 </div>

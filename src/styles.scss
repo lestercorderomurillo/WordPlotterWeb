@@ -15,13 +15,35 @@ mat-tab {
     overflow-y: scroll;
 }
 
+.mat-checkbox-layout{
+    white-space: normal !important;
+    
+    }
+    .mat-checkbox-inner-container{
+        margin-top: 4px;
+    }
+
+.hidden{
+    display: none;
+}
+
+.mat-excel {
+    background-color: rgb(70, 129, 47);
+    color: #fff;
+}
+
 .container {
     display: inline-block;
     box-sizing: border-box;
-    padding: 15px;
+    padding: 25px;
     padding-bottom: 0px;
     width: 100%;
     height: 100%;
+}
+
+.card-border {
+    -webkit-box-shadow: 0px 0px 50px 6px rgba(0, 0, 0, 0.21);
+    box-shadow: 0px 0px 30px 3px rgba(0, 0, 0, 0.06);
 }
 
 .card {
@@ -31,6 +53,7 @@ mat-tab {
     border: solid rgba(48, 48, 48, 0.218) 1px;
     padding: 10px;
     width: 100%;
+    max-width: 750px;
     -webkit-box-shadow: 0px 0px 50px 6px rgba(0, 0, 0, 0.21);
     box-shadow: 0px 0px 30px 3px rgba(0, 0, 0, 0.06);
     overflow-y: hidden;
@@ -40,7 +63,17 @@ mat-tab {
 .scrollable-y {
     width: 100%;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.truncated {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .inline {
@@ -57,6 +90,10 @@ mat-tab {
 
 .float-right {
     float: right;
+}
+
+.float-none {
+    float: none;
 }
 
 .padding-top {

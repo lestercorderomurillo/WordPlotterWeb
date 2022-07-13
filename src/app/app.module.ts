@@ -17,6 +17,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { PlotsTabComponent } from './components/plotsTab/plotsTab.component';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     GroupTabComponent,
     OptionsTabComponent,
     PlotsTabComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
