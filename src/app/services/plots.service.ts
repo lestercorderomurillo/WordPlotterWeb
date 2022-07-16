@@ -12,7 +12,6 @@ export class PlotsService {
   constructor(private dataService: DataService) {
     this.plots = new Map<string, EChartsOption>();
   }
-
   public updatePlotsForGroup(groupName: string) {
     if (this.dataService.groups.has(groupName)) {
       const wordsGroup = this.dataService.groups.get(groupName) as Group;
