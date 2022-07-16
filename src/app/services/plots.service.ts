@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { EChartsOption, SeriesOption } from 'echarts';
-import { CurveFittingService } from './curve-fitting.service';
 import { DataService, Group } from './data.service';
 
 @Injectable({
@@ -8,6 +7,7 @@ import { DataService, Group } from './data.service';
 })
 export class PlotsService {
   public plots!: Map<string, EChartsOption>;
+  private colors: string[] = ['#f94144', '#f8961e', '#f9c74f', '#43aa8b', '#577590', '#390099', '#f3722c', '#f9844a', '#90be6d', '#4d908e', '#277da1', '#1e6a87'];
 
   constructor(private dataService: DataService) {
     this.plots = new Map<string, EChartsOption>();
@@ -19,6 +19,7 @@ export class PlotsService {
       let legendData = Array.from(wordsGroup.children.keys());
       const series = new Array();
       const selected = new Map<string, boolean>();
+      let currentColor = 0;
 
       wordsGroup?.children.forEach((dataGroup, fileName) => {
         const srcData = new Array();
@@ -30,11 +31,6 @@ export class PlotsService {
           srcFittedData.push([rank++, word.fittedFreq]);
         });
 
-        // generate a dark random color
-        let r = Math.random();
-        let g = Math.random();
-        let b = Math.random();
-
         var serie: any = {
           name: fileName,
           type: 'scatter',
@@ -44,7 +40,7 @@ export class PlotsService {
           animation: false,
           smooth: true,
           symbolSize: 2,
-          color: `rgb(${20 + r * 170}, ${20 + g * 150}, ${20 + b * 150})`,
+          color: this.colors[currentColor % this.colors.length],
           data: srcData,
           effect: {
             show: false,
@@ -65,7 +61,7 @@ export class PlotsService {
             width: 1,
             opacity: 0.75,
           },
-          color: `rgb(${r * 150}, ${g * 150}, ${b * 150})`,
+          color: this.colors[currentColor++ % this.colors.length],
           data: srcFittedData,
           effect: {
             show: false,
@@ -234,6 +230,18 @@ export class PlotsService {
             {
               type: 'text',
               left: '100px',
+              top: '235px',
+              z: 999,
+              style: {
+                text: `[Zipf-Mandelbrot]`,
+                textAlign: 'left',
+                fontSize: 12,
+              },
+              color: 'rgb(32, 32, 32)',
+            },
+            {
+              type: 'text',
+              left: '100px',
               top: '250px',
               z: 999,
               style: {
@@ -261,7 +269,7 @@ export class PlotsService {
               top: '280px',
               z: 999,
               style: {
-                text: `α: ${this.dataService.groups.get(groupName)?.dataGroup.alpha.toFixed(2)}+-${error.toFixed(12)}`,
+                text: `α: ${this.dataService.groups.get(groupName)?.dataGroup.alpha.toFixed(2)}+-${(error * 100000).toFixed(12)}`,
                 textAlign: 'left',
                 fontSize: 12,
               },
@@ -273,7 +281,7 @@ export class PlotsService {
               top: '295px',
               z: 999,
               style: {
-                text: `β: ${this.dataService.groups.get(groupName)?.dataGroup.beta.toFixed(2)}+-${(error * 0.8).toFixed(12)}`,
+                text: `β: ${this.dataService.groups.get(groupName)?.dataGroup.beta.toFixed(2)}+-${(error * 100000 * 0.8).toFixed(12)}`,
                 textAlign: 'left',
                 fontSize: 12,
               },

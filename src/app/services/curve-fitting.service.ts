@@ -64,31 +64,26 @@ export class CurveFittingService {
     let bestAlpha = 0;
     let bestBeta = 0;
     let lowestAverageError = Number.MAX_VALUE;
-
     if (fitName === 'zipfmandelbrot') {
       let sampleValues = new Array<number>();
-      let sample = [...values].slice(0, 32).concat([...values].reverse().slice(0, 16));
+      let sample = [...values].slice(0, 80).concat([...values].reverse().slice(0, 20));
       sample.forEach((entry) => {
         sampleValues.push(entry[1].normFreq);
       });
-
       let alpha = 0;
       let beta = 0;
-
-      for (let constant = 0.0; constant < 1; constant += 0.005) {
+      let rank = 1;
+      let averageError = 0;
+      for (let constant = 0.05; constant < 1; constant += 0.005) {
         await new Promise((resolve) => setTimeout(resolve, 0));
-
-        for (alpha = 0.2; alpha < 1; alpha += 0.0075) {
-          for (beta = 0.72; beta < 1; beta += 0.008) {
-            let rank = 1;
-
-            let averageError = 0;
+        for (alpha = 0.225; alpha < 1; alpha += 0.01) {
+          for (beta = 0.75; beta < 1; beta += 0.01) {
+            rank = 1;
+            averageError = 0;
             sampleValues.forEach((word) => {
               averageError += (this.calcZipfmandelbrot(rank++, alpha, beta, constant) - word) ** 2;
             });
-
             averageError /= sampleValues.length;
-
             if (averageError <= lowestAverageError) {
               lowestAverageError = averageError;
               bestConstant = constant;
@@ -99,7 +94,6 @@ export class CurveFittingService {
         }
       }
     }
-
     return { constant: bestConstant, alpha: bestAlpha, beta: bestBeta, error: lowestAverageError };
   }
 }
