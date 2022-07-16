@@ -67,7 +67,7 @@ export class CurveFittingService {
 
     if (fitName === 'zipfmandelbrot') {
       let sampleValues = new Array<number>();
-      let sample = [...values].slice(0, 50).concat([...values].reverse().slice(0, 15));
+      let sample = [...values].slice(0, 32).concat([...values].reverse().slice(0, 16));
       sample.forEach((entry) => {
         sampleValues.push(entry[1].normFreq);
       });
@@ -78,8 +78,8 @@ export class CurveFittingService {
       for (let constant = 0.0; constant < 1; constant += 0.005) {
         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        for (alpha = 0.2; alpha < 1; alpha += 0.01) {
-          for (beta = 0.75; beta < 1; beta += 0.01) {
+        for (alpha = 0.2; alpha < 1; alpha += 0.0075) {
+          for (beta = 0.72; beta < 1; beta += 0.008) {
             let rank = 1;
 
             let averageError = 0;
